@@ -7,10 +7,12 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.io.IOException;
 import java.net.URI;
 
 public class ProfileActivity extends AppCompatActivity {
@@ -26,7 +28,7 @@ public class ProfileActivity extends AppCompatActivity {
     private TextView email;
     private TextView homepage;
     private ImageView avatar;
-    private Bitmap bitmap;
+    private Uri uri;
     private String url;
 
     @Override
@@ -47,10 +49,13 @@ public class ProfileActivity extends AppCompatActivity {
             homepage.setText(extras.getString(HOMEPAGE_KEY));
             url = extras.getString(HOMEPAGE_KEY);
             fullname.setText(extras.getString(FULL_KEY));
-            bitmap = getIntent().getParcelableExtra(IMAGE_KEY);
-            if(bitmap == null){
-                bitmap = BitmapFactory.decodeResource(this.getResources(),
-                        R.drawable.profile_picture);}
+            uri = Uri.parse(extras.getString(IMAGE_KEY));
+            Bitmap bitmap = null;
+            try {
+                bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), uri);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             avatar.setImageBitmap(bitmap);
         }
     }

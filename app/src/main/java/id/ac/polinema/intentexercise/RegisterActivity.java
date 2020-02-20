@@ -37,7 +37,7 @@ public class RegisterActivity extends AppCompatActivity {
     private EditText HomepageText;
     private EditText AboutText;
 
-    private Bitmap bitmap = null;
+    private Uri imageUri = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,8 +63,8 @@ public class RegisterActivity extends AppCompatActivity {
         if (requestCode == GALLERY_REQUEST_CODE) {
             if (data != null) {
                 try {
-                    Uri imageUri = data.getData();
-                    bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), imageUri);
+                    imageUri = data.getData();
+                    Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), imageUri);
                     avatarImage.setImageBitmap(bitmap);
                 } catch (IOException e) {
                     Toast.makeText(this, "Can't load image", Toast.LENGTH_SHORT).show();
@@ -110,8 +110,8 @@ public class RegisterActivity extends AppCompatActivity {
             countError--;
         }
         if(countError == 0){
-            if(bitmap != null){
-                intent.putExtra(IMAGE_KEY, bitmap);
+            if(imageUri != null){
+                intent.putExtra(IMAGE_KEY, imageUri.toString());
                 try{
                     startActivity(intent);
                 }catch(Exception ex){
